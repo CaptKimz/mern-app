@@ -1,0 +1,19 @@
+version: '1'
+services:
+  client:
+    build:
+      context: ../client
+      dockerfile: dockerfile
+    ports:
+      - "8000:80"
+    depends_on:
+      - server
+    restart: always
+
+  server:
+    build:
+      context: ../server
+      dockerfile: dockerfile
+    ports:
+      - "8080:8080"
+    restart: always

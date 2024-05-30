@@ -1,0 +1,20 @@
+FROM node:20-alpine AS base
+
+FROM base AS builder
+WORKDIR /app
+# Copy the package.json file.
+COPY package*.json .
+# Install application dependencies.
+RUN npm install
+# Copy the rest of the application files.
+COPY . .
+RUN npm run build
+
+# Step 2: Serve the application using Nginx
+FROM base as runner
+WORKDIR /app
+COPY package*.json ./
+RUN npm install -g serve
+COPY --from=builder /app/build ./build
+EXPOSE 80
+CMD ["serve", "-s", "build", "-l", "80"]
